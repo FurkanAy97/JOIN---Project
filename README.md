@@ -1,5 +1,5 @@
 # JOIN-Project
-"JOIN" Kanban Board - A Kanban Webapplication for educational purposes
+"JOIN" Kanban Board - A Kanban Webapplication.
 "JOIN" is an intuitive and user-friendly web application that brings the power of Kanban boards to your fingertips. Whether you're managing personal tasks, collaborating with a team, or organizing projects, "JOIN" offers a seamless and efficient experience. This application is designed to streamline your workflow and enhance productivity.
 
 Key features of "JOIN" include:
