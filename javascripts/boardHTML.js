@@ -47,9 +47,7 @@ function openTaskCardHTML(i, cardID) {
   return /* html */ `
     <div class="task-card-big" id="${cardID}">
       <div class="task-card-big-content">
-        <div class="category-label-big" style="background-color: ${renderCategoryLabelColor(
-          i
-        )};">
+        <div class="category-label-big" style="background-color: ${renderCategoryLabelColor(i)};">
           ${
             remoteTasksAsJSON[i]["category"][0].toUpperCase() +
             remoteTasksAsJSON[i]["category"].slice(1)
@@ -58,20 +56,16 @@ function openTaskCardHTML(i, cardID) {
         </div>
         <div class="task-title-big">${remoteTasksAsJSON[i]["title"]}</div>
         <div class="task-description-big">${renderTaskDescription(i)}</div>
-        <div class="due-date"><b>Due date:</b> ${
-          remoteTasksAsJSON[i]["dueDate"]
-        }</div>
+        <div class="due-date"><b>Due date:</b> ${remoteTasksAsJSON[i]["dueDate"]}</div>
         <div class="task-card-priority"><b>Priority:</b> <img src="${renderUrgencyLabel(
           i
         )}" /></div>
         <span><b>Assigned To:</b></span>
         <div id="assignedTo-container"></div>
-        <div class="open-task-buttons">
           <div class="delete-button" onclick="deleteCard(${i}, '${cardID}')">
             <img src="assets/icons/delete_black.png" />
           </div>
           <div class="edit-button" onclick="editTaskCard(${i})"><img src="assets/icons/Pencil_icon.png" /></div>
-        </div>
       </div>
 
     </div>
@@ -149,9 +143,7 @@ function editTaskCardHTML(taskIndex) {
             <h3>Subtasks</h3>
             <div class="subtask-container">
               <div class="subtask-bar">
-                <div class="progress" style="width:${renderProgress(
-                  taskIndex
-                )}%"></div>
+                <div class="progress" style="width:${renderProgress(taskIndex)}%"></div>
               </div>
               <p class="progress-text">${countDoneSubtasks(taskIndex)}/${
     remoteTasksAsJSON[taskIndex]["subtasks"].length
@@ -329,9 +321,7 @@ function subtaskHTML(inputFieldValue, i, subtaskStatus) {
   subtaskCount++;
   return /* html */ `
     <div id="subtask-${subtaskCount}" class="subtask">
-      <input type="checkbox" class="checkbox" ${
-        isSubtaskChecked(subtaskStatus) ? "checked" : ""
-      } />
+      <input type="checkbox" class="checkbox" ${isSubtaskChecked(subtaskStatus) ? "checked" : ""} />
       <p>${inputFieldValue}</p>
     </div>
   `;

@@ -454,6 +454,9 @@
 }
 
 .delete-button {
+  position: absolute;
+  right: 80px;
+  bottom: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -476,6 +479,9 @@
 }
 
 .edit-button {
+  position: absolute;
+  right: 30px;
+  bottom: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -685,7 +691,7 @@
 
   .task-card-big {
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
     margin-left: 0px;
     justify-content: center;
     padding: 5px;
@@ -705,7 +711,7 @@
     justify-content: space-evenly;
     align-items: start;
     flex-direction: column;
-    height: 73vh;
+    height: 73dvh;
     overflow-y: scroll;
     padding-left: 20px;
     padding-right: 20px;
@@ -738,7 +744,7 @@
     border-radius: 10px;
     position: absolute;
     right: 20px;
-    bottom: 190px;
+    bottom: 210px;
     width: 40px;
     height: 40px;
   }
@@ -747,11 +753,11 @@
     border-radius: 10px;
     position: absolute;
     right: 20px;
-    bottom: 125px;
+    bottom: 145px;
   }
 
   .task-section-edit {
-    height: calc(100vh - 170px);
+    height: calc(100dvh - 170px);
     width: 90%;
     overflow-y: scroll;
     padding: 0 20px;
@@ -784,7 +790,7 @@
   #slideInContainer {
     border-radius: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     padding: 260px 20px 50px 20px;
     overflow-y: auto;
     justify-content: space-evenly;
@@ -816,6 +822,7 @@
 }
 
 @media (max-width: 455px) {
+
   .task-card,
   .task-header {
     width: 80%;

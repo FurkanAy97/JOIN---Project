@@ -3,11 +3,8 @@ let contactsByLetter = [];
 let remoteContactsAsJSON;
 
 async function initContactList() {
-  //get all the firstletters of contacts and push them into seperate array;
-  //creating seperate array of contacts sorted by first letters
   let res = await getItem("contactsRemote");
   remoteContactsAsJSON = await JSON.parse(res.data.value.replace(/'/g, '"'));
-
   letters = [];
   contactsByLetter = [];
   document.getElementById("contactList").innerHTML = "";
@@ -23,14 +20,10 @@ async function initContactList() {
     }
     contactsByLetter[firstLetter].push(contact);
   }
-
   renderContactList();
 }
 
 function renderContactList() {
-  //iterating through letters array to create letters as headline
-  //iterating through contactsByLetter[Letter] to render those below the matching firstLetter
-
   for (let i = 0; i < letters.length; i++) {
     let letter = letters[i];
     let contactsWithLetter = contactsByLetter[letter];
@@ -100,9 +93,7 @@ function renderSelectContactHTML(i, j) {
     </div>
     <div>
       <h1 id="emptyName" >${name}</h1>
-      <div class="contacts-add-task">
-        <img src="assets/icons/plus.small.png" /> &nbsp; Add Task
-      </div>
+      
     </div>
   </div>
   <div class="contact-info">

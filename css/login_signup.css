@@ -87,9 +87,8 @@
   align-items: center;
   background-color: white;
   width: 652px;
-  height: 513px;
+  /*   height: 513px; */
   border-radius: 30px;
-  box-shadow: 0px 0px 14px 3px rgba(0, 0, 0, 0.04);
 }
 
 .login-form h1 {
@@ -312,13 +311,11 @@
 }
 
 .sign-up-container {
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 100px;
   gap: 30px;
-  top: 67px;
-  right: 114px;
   animation: 1s fadeIn ease-in-out;
   animation-delay: 1s;
 }
@@ -370,10 +367,14 @@
   cursor: pointer;
 }
 
-@media (max-width: 800px) {
+@media screen and (max-width: 800px) {
   .login-form {
     width: 372px;
-    height: 573px;
+    height: 640px;
+    box-shadow: none;
+    border: none;
+    background-color: unset;
+    outline: none;
   }
 
   .login-form h1 {
@@ -384,14 +385,15 @@
 
   .logo-container {
     width: 372px;
-    height: 573px;
+    height: 615px;
     z-index: 5;
     position: relative;
     flex-direction: column;
     display: flex;
     align-items: center;
     border-radius: 30px;
-    box-shadow: 0px 0px 14px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0px 0px 14px 3px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
   }
 
   .logo-layer {
@@ -406,12 +408,6 @@
     pointer-events: none;
     border: none;
   }
-
-  .logo-container {
-    pointer-events: none;
-  }
-
-  
 
   .signup-form {
     width: 372px;
@@ -445,13 +441,15 @@
   .button-container-login {
     flex-direction: column;
     align-items: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
+
+
   .sign-up-container {
-    top: unset;
-    bottom: 50px;
-    right: 50%;
-    transform: translate(50%);
+    width: unset;
+    margin-top: 1rem;
   }
 
   .logo-big-static {
@@ -496,6 +494,7 @@
 
   .button-container-login {
     gap: 21px;
+    margin-top: 1.5rem;
   }
 
   .login-button {
@@ -506,12 +505,6 @@
   .guest-login-button {
     width: 180px;
     font-size: 16px;
-  }
-
-  .sign-up-container {
-    width: 287px;
-    margin-bottom: 41px;
-    bottom: 10px;
   }
 
   .form-actions {
