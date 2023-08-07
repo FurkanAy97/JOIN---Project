@@ -1,5 +1,11 @@
 let subtaskCount = 0;
 
+/**
+ * Generates HTML for a task card.
+ * @param {number} i - The index of the task in the remoteTasksAsJSON array.
+ * @param {string} cardID - The ID of the generated task card.
+ * @returns {string} The HTML code for the task card.
+ */
 function taskCardHTML(i, cardID) {
   return /* html */ `
   <div draggable="true" ondragstart="startDragging(${i})"  class="task-card" id="${cardID}" onclick="openTaskCard(${i}, '${cardID}')">
@@ -43,6 +49,12 @@ function taskCardHTML(i, cardID) {
   </div>`;
 }
 
+/**
+ * Generates HTML for an expanded task card view.
+ * @param {number} i - The index of the task in the remoteTasksAsJSON array.
+ * @param {string} cardID - The ID of the generated task card.
+ * @returns {string} The HTML code for the expanded task card view.
+ */
 function openTaskCardHTML(i, cardID) {
   return /* html */ `
     <div class="task-card-big" id="${cardID}">
@@ -72,6 +84,11 @@ function openTaskCardHTML(i, cardID) {
   `;
 }
 
+/**
+ * Generates HTML for editing a task card.
+ * @param {number} taskIndex - The index of the task in the remoteTasksAsJSON array.
+ * @returns {string} The HTML code for editing a task card.
+ */
 function editTaskCardHTML(taskIndex) {
   return /* html */ `
       <div class="task-section-edit">
@@ -155,6 +172,13 @@ function editTaskCardHTML(taskIndex) {
   `;
 }
 
+/**
+ * Generates HTML for rendering assigned contacts.
+ * @param {string} contactColor - The color associated with the contact.
+ * @param {string} initials - The initials of the assigned contact.
+ * @param {string} assignedToName - The name of the assigned contact.
+ * @returns {string} The HTML code for rendering assigned contacts.
+ */
 function assignedToHTML(contactColor, initials, assignedToName) {
   return `
   <div class="assignedTo-row">
@@ -163,12 +187,23 @@ function assignedToHTML(contactColor, initials, assignedToName) {
   `;
 }
 
+/**
+ * Generates HTML for rendering assigned contacts in a card layout.
+ * @param {string} contactColor - The color associated with the contact.
+ * @param {string} initials - The initials of the assigned contact.
+ * @returns {string} The HTML code for rendering assigned contacts in a card layout.
+ */
 function assignedToCardHTML(contactColor, initials) {
   return `
   <div class="initial-label-card" style="background-color:${contactColor}">${initials}</div>
   `;
 }
 
+/**
+ * Generates HTML for the slide-in task form.
+ * @param {string} status - The status of the task.
+ * @returns {string} The HTML code for the slide-in task form.
+ */
 function slideInHTML(status) {
   return /* html */ `
       <div id="slideInContainer" class="task-form">
@@ -317,6 +352,13 @@ function slideInHTML(status) {
   `;
 }
 
+/**
+ * Generates HTML for a subtask.
+ * @param {string} inputFieldValue - The value of the subtask.
+ * @param {number} i - The index of the task in the remoteTasksAsJSON array.
+ * @param {string} subtaskStatus - The status of the subtask (done/inProgress).
+ * @returns {string} The HTML code for a subtask.
+ */
 function subtaskHTML(inputFieldValue, i, subtaskStatus) {
   subtaskCount++;
   return /* html */ `

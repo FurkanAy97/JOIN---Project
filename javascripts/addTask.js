@@ -4,6 +4,9 @@ let selectedCategory;
 let subtaskID = 0;
 let remoteCategoryAsJSON;
 
+/**
+ * initializes the AddTask Page
+ */
 async function initAddTask() {
   remoteTasksAsJSON = await getRemoteData("tasksRemote");
   remoteCategoryAsJSON = await getRemoteData("categoryRemote");
@@ -12,6 +15,10 @@ async function initAddTask() {
   addSubtaskEventListener();
 }
 
+/**
+ * Sets the priority for the task and updates the UI accordingly.
+ * @param {string} prio - The priority value ("urgent", "medium", or "low").
+ */
 function setPrio(prio) {
   let urgentIcon = document.getElementById("urgentIcon");
   let mediumIcon = document.getElementById("mediumIcon");
@@ -31,8 +38,10 @@ function setPrio(prio) {
   priority = prio;
 }
 
+/**
+ * Adds contact names to the "Assigned To" dropdown in the add task form.
+ */
 function addContactNamesToAssignedTo() {
-  //adding and rendering contacts to dropdown menu
   document.getElementById("selectContactDropdown").innerHTML = "";
   for (let i = 0; i < contacts.length; i++) {
     let contact = contacts[i];
@@ -42,8 +51,10 @@ function addContactNamesToAssignedTo() {
   }
 }
 
+/**
+ * Adds categories to the "Category" dropdown in the add task form.
+ */
 async function addCategories() {
-  //adding and rendering categories to dropdown menu
   document.getElementById(
     "categoryDropdown"
   ).innerHTML = `<div class="option" onclick="showNewCategory()">
@@ -54,14 +65,17 @@ async function addCategories() {
     let name = category["name"];
     let color = category["color"];
     name = name.charAt(0).toUpperCase() + name.slice(1);
-    document.getElementById("categoryDropdown").innerHTML += genCategoryHTML(
-      i,
-      name,
-      color
-    );
+    document.getElementById("categoryDropdown").innerHTML += genCategoryHTML(i, name, color);
   }
 }
 
+/**
+ * Generates the HTML representation for a category in the dropdown.
+ * @param {number} i - Index of the category in the list.
+ * @param {string} name - Category name.
+ * @param {string} color - Category color.
+ * @returns {string} The HTML code representing a category in the dropdown.
+ */
 function genCategoryHTML(i, name, color) {
   return `
 <div onclick="selectOptionCategory(${i})" class="option">
@@ -73,8 +87,11 @@ function genCategoryHTML(i, name, color) {
 </div>`;
 }
 
+/**
+ * Pushes an assigned contact to the assignedContacts array.
+ * @param {number} i - Index of the selected contact in the contacts array.
+ */
 function pushAssignedContact(i) {
-  // pushing selected contacts into assignedContacts Array
   let contact = contacts[i];
   let index = assignedContacts.indexOf(contact);
   if (index <= -1 && assignedContacts.length < 5) {
@@ -82,6 +99,11 @@ function pushAssignedContact(i) {
   }
 }
 
+/**
+ * Creates a new task and saves it to the remote tasks list.
+ * @param {string} status - The status of the task ("todo", "inProgress", or "done").
+ * @returns {Promise<void>}
+ */
 async function createTask(status) {
   let title = document.getElementById("addTaskTitle");
   let description = document.getElementById("addTaskDescription");
@@ -109,8 +131,10 @@ async function createTask(status) {
   }
 }
 
+/**
+ * Handles the redirection after adding a task, and resets the form values.
+ */
 function boardCondition() {
-  //in case task is added in add_task.html, window.location will jump to board.html
   if (window.location.pathname.includes("add_task.html")) {
     setTimeout(() => {
       window.location.href = "board.html";
@@ -122,6 +146,12 @@ function boardCondition() {
   }
 }
 
+/**
+ * Resets the form values after a task is added or canceled.
+ * @param {HTMLInputElement} dueDate - The input element for the task's due date.
+ * @param {HTMLTextAreaElement} description - The textarea element for the task's description.
+ * @param {HTMLInputElement} title - The input element for the task's title.
+ */
 function resetValues(dueDate, description, title) {
   let category = document.getElementById("addTaskCategory");
   let assignedTo = document.getElementById("chosenContacts");
@@ -144,8 +174,10 @@ function resetValues(dueDate, description, title) {
   selectedCategory = [];
 }
 
-// custom select/dropdown
 //-----------dropdown-category --------------------//
+/**
+ * Opens the category dropdown in the add task form.
+ */
 function openDropdownCategory() {
   let dropdown = document.getElementById("categoryDropdown");
   let category = document.getElementById("addTaskCategory");
@@ -153,6 +185,10 @@ function openDropdownCategory() {
   category.classList.toggle("category-expanded");
 }
 
+/**
+ * Selects a category from the dropdown and updates the selectedCategory.
+ * @param {number} i - Index of the selected category in the remoteCategoryAsJSON array.
+ */
 function selectOptionCategory(i) {
   let dropdown = document.getElementById("categoryDropdown");
   let category = document.getElementById("addTaskCategory");
@@ -165,6 +201,9 @@ function selectOptionCategory(i) {
   category.classList.remove("category-expanded");
 }
 
+/**
+ * Displays the "New Category" input and hides the category dropdown temporarily.
+ */
 function showNewCategory() {
   let selectCat = document.getElementById("addTaskCategory");
   let newCat = document.getElementById("newCat");
@@ -174,6 +213,10 @@ function showNewCategory() {
   dropdown.classList.add("d-none");
   renderColors();
 }
+
+/**
+ * Closes the "New Category" input and displays the category dropdown again.
+ */
 function closeNewCategory() {
   let selectCat = document.getElementById("addTaskCategory");
   let newCat = document.getElementById("newCat");
@@ -183,6 +226,10 @@ function closeNewCategory() {
   dropdown.classList.remove("d-none");
   document.getElementById("newCatInput").value = "";
 }
+
+/**
+ * Renders the color options for creating a new category.
+ */
 function renderColors() {
   let colorContainer = document.getElementById("newCatColors");
   colorContainer.innerHTML = "";
@@ -192,6 +239,11 @@ function renderColors() {
     <div id="newCatColorID${i}" onclick="selectCatColor(${i})" style="background-color: ${color}" class="newCatColor"></div>`;
   }
 }
+
+/**
+ * Selects a color for the new category when creating it.
+ * @param {number} i - Index of the selected color in the nameColor array.
+ */
 function selectCatColor(i) {
   let newColor = document.getElementById(`newCatColorID${i}`);
   let allColors = document.querySelectorAll(".newCatColor");
@@ -201,13 +253,17 @@ function selectCatColor(i) {
   newColor.classList.add("selectedColor");
 }
 
+/**
+ * Adds a new category to the remote category list.
+ * Retrieves the new category name and color from the input fields.
+ * @returns {Promise<void>}
+ */
 async function addNewCategory() {
   let newCatInp = document.getElementById("newCatInput");
   let newColorElement = document.querySelector(".selectedColor");
   let newColor = newColorElement ? newColorElement.style.backgroundColor : null;
   let newCat = newCatInp.value;
   newCat = newCat.charAt(0).toUpperCase() + newCat.slice(1);
-
   if (newCat && newColor) {
     let newCategory = {
       name: newCat,
@@ -216,11 +272,16 @@ async function addNewCategory() {
     remoteCategoryAsJSON.push(newCategory);
     await setItem("categoryRemote", remoteCategoryAsJSON);
   }
-
   addCategories();
   closeNewCategory();
 }
 
+/**
+ * Removes a category from the remote category list and updates the UI.
+ * @param {Event} event - The event object from the click event.
+ * @param {number} i - Index of the category to be removed in the remoteCategoryAsJSON array.
+ * @returns {Promise<void>}
+ */
 async function removeCategory(event, i) {
   event.stopPropagation();
 
@@ -233,6 +294,9 @@ async function removeCategory(event, i) {
 //-----------dropdown-category --------------------//
 //-----------dropdown-contacts --------------------//
 
+/**
+ * Opens the contacts dropdown in the add task form.
+ */
 function openDropdownContacts() {
   let dropdown = document.getElementById("selectContactDropdown");
   let selectContact = document.getElementById("selectContact");
@@ -240,8 +304,11 @@ function openDropdownContacts() {
   selectContact.classList.toggle("category-expanded");
 }
 
+/**
+ * Selects a contact from the dropdown and adds it to the chosen contacts list.
+ * @param {number} i - Index of the selected contact in the contacts array.
+ */
 function selectOptionContacts(i) {
-  // Adding and rendering selected Contacts into container below dropdown menu
   let dropdown = document.getElementById("selectContactDropdown");
   let selectContact = document.getElementById("selectContact");
   let chosenContacts = document.getElementById("chosenContacts");
@@ -269,12 +336,14 @@ function selectOptionContacts(i) {
   selectContact.classList.remove("category-expanded");
 }
 
-//
+/**
+ * Checks if a contact is already selected in the chosen contacts list.
+ * @param {HTMLElement} chosenContacts - The container for the chosen contacts.
+ * @param {Object} contact - The selected contact object.
+ * @returns {boolean} True if the contact is already selected, false otherwise.
+ */
 function isContactSelected(chosenContacts, contact) {
-  // checking if contact is in chosenContacts
-  let contactElements = chosenContacts.getElementsByClassName(
-    "chosenContactInitials"
-  );
+  let contactElements = chosenContacts.getElementsByClassName("chosenContactInitials");
 
   for (let i = 0; i < contactElements.length; i++) {
     let initials = contactElements[i].textContent.trim();
@@ -289,18 +358,18 @@ function isContactSelected(chosenContacts, contact) {
 //-----------dropdown-contacts ------------------------//
 //-----------remove added contacts --------------------//
 
+/**
+ * Removes a contact from the chosen contacts list and updates the UI.
+ * @param {number} i - Index of the contact to be removed in the contacts array.
+ */
 function removeContact(i) {
-  // Remove the contact from the assignedContacts array
   let dropdown = document.getElementById("selectContactDropdown");
   let contact = contacts[i];
   let contactID = assignedContacts.indexOf(contact);
   assignedContacts.splice(contactID, 1);
-
-  // Add the selected contact back to the dropdown if it doesn't exist
   let selectedContact = contacts[i];
   let contactName = selectedContact.name;
   let assignedContactID = `assignedContactID${i}`;
-
   let existingOption = dropdown.querySelector(`#${assignedContactID}`);
   if (!existingOption) {
     let newOptionHTML = `
@@ -308,13 +377,16 @@ function removeContact(i) {
     `;
     dropdown.innerHTML += newOptionHTML;
   }
-
   removeFromChosenContacts(i, contactName);
   recoverAssignedContact(assignedContactID);
 }
 
+/**
+ * Removes a contact from the chosen contacts list UI.
+ * @param {number} i - Index of the contact to be removed in the contacts array.
+ * @param {string} contactName - Name of the contact to be removed.
+ */
 function removeFromChosenContacts(i, contactName) {
-  // Remove the contact from the chosenContacts container
   let chosenContacts = document.getElementById("chosenContacts");
   let contactInitials = getInitials(contactName);
   let chosenContact = chosenContacts.querySelector(
@@ -325,14 +397,21 @@ function removeFromChosenContacts(i, contactName) {
   }
 }
 
+/**
+ * Recovers an assigned contact option in the contacts dropdown.
+ * @param {string} assignedContactID - The ID of the assigned contact to be recovered in the selectContactDropdown.
+ */
 function recoverAssignedContact(assignedContactID) {
-  // Show the assigned contact again in the selectContactDropdown
   let assignedContact = document.getElementById(assignedContactID);
   if (assignedContact) {
     assignedContact.classList.remove("d-none");
   }
 }
 
+/**
+ * Removes a contact from the assigned contacts list when the contact is deleted from contacts.
+ * @param {number} i - Index of the deleted contact in the contacts array.
+ */
 function deleteFromAssignedContacts(i) {
   let contactName = contacts[i]["name"];
   let index = assignedContacts.findIndex((obj) => obj.name === contactName);
@@ -341,8 +420,11 @@ function deleteFromAssignedContacts(i) {
   }
 }
 
-
 //-------------task successfully added----------------//
+/**
+ * Displays a popup message to indicate successful task creation or missing information.
+ * @param {string} change - The type of change: 'alert' or undefined (task successfully added).
+ */
 function taskPopup(change) {
   let success = document.getElementById("taskAdded");
   if (change == alert) {
@@ -358,6 +440,9 @@ function taskPopup(change) {
 //-------------task successfully added----------------//
 
 //-------------setting min date to today----------------//
+/**
+ * Sets the minimum date for the "Due Date" input field to today.
+ */
 function setMinDate() {
   let date = new Date();
   let year = date.getFullYear();
@@ -378,6 +463,9 @@ function setMinDate() {
 
 //-------------subtask----------------//
 
+/**
+ * Adds event listeners to the subtask input field to show and hide the subtask buttons container.
+ */
 function addSubtaskEventListener() {
   const inputField = document.getElementById("addTaskSubtask");
   const container = document.getElementById("subtask-buttons");
@@ -393,6 +481,9 @@ function addSubtaskEventListener() {
   });
 }
 
+/**
+ * Creates a new subtask and adds it to the subtask container.
+ */
 function createNewSubtask() {
   let inputField = document.getElementById("addTaskSubtask");
   let subtaskContainer = document.getElementById("subtaskContainer");
@@ -404,20 +495,23 @@ function createNewSubtask() {
   }
 }
 
+/**
+ * Renders subtasks for a specific task when editing it.
+ * @param {number} taskID - The index of the task in the remoteTasksAsJSON array.
+ */
 function renderSubtask(taskID) {
   let subtaskContainer = document.getElementById("editSubtaskContainer");
-
   for (let i = 0; i < remoteTasksAsJSON[taskID]["subtasks"].length; i++) {
     const subtaskName = remoteTasksAsJSON[taskID]["subtasks"][i]["name"];
     const subtaskStatus = remoteTasksAsJSON[taskID]["subtasks"][i]["status"];
-    subtaskContainer.innerHTML += subtaskHTML(
-      subtaskName,
-      taskID,
-      subtaskStatus
-    );
+    subtaskContainer.innerHTML += subtaskHTML(subtaskName, taskID, subtaskStatus);
   }
 }
 
+/**
+ * Collects the subtask data from the UI and prepares it for storing in the remote tasks.
+ * @returns {Array<Object>} An array of subtask objects.
+ */
 function pushSubtasks() {
   let subtasks = document.querySelectorAll(".subtask");
   let subtaskArray = [];
@@ -431,6 +525,11 @@ function pushSubtasks() {
   return subtaskArray;
 }
 
+/**
+ * Checks whether a subtask is checked or not (done or in progress).
+ * @param {HTMLInputElement} checkbox - The checkbox input element for the subtask.
+ * @returns {string} The status of the subtask ("done" or "inProgress").
+ */
 function isChecked(checkbox) {
   if (checkbox.checked) {
     return "done";
@@ -439,6 +538,11 @@ function isChecked(checkbox) {
   }
 }
 
+/**
+ * Checks if a subtask is marked as done (checked).
+ * @param {string} subtaskStatus - The status of the subtask ("done" or "inProgress").
+ * @returns {boolean} True if the subtask is marked as done, false otherwise.
+ */
 function isSubtaskChecked(subtaskStatus) {
   if (subtaskStatus === "done") {
     return true;
@@ -446,6 +550,9 @@ function isSubtaskChecked(subtaskStatus) {
   return false;
 }
 
+/**
+ * Clears the value of the subtask input field after adding a new subtask.
+ */
 function emptySubtaskValue() {
   let inputField = document.getElementById("addTaskSubtask");
   inputField.value = "";

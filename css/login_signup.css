@@ -314,7 +314,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 30px;
+  padding-bottom: 20px;
   gap: 30px;
   animation: 1s fadeIn ease-in-out;
   animation-delay: 1s;
@@ -450,6 +451,7 @@
   .sign-up-container {
     width: unset;
     margin-top: 1rem;
+    padding-bottom: 0px;
   }
 
   .logo-big-static {

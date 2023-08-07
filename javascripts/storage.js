@@ -164,6 +164,12 @@ let categories = [{
 
 /* ***************************************************************** */
 
+/**
+ * Generates initials from a full name by extracting the first character of each name part.
+ * 
+ * @param {string} name - The full name from which to generate initials.
+ * @returns {string} The generated initials.
+ */
 function getInitials(name) {
     let initials = "";
     let splitted_name = name.split(" ");
@@ -179,20 +185,39 @@ function getInitials(name) {
 }
 
 /* ****************************************************************+ */
-
+/**
+ * The authentication token used for remote storage operations.
+ * @type {string}
+ */
 const STORAGE_TOKEN = "MLE4FP69ONVV67KMFU3FKXMYW4QOHHIWOCDSIKV0";
+/**
+ * The base URL for remote storage operations.
+ * @type {string}
+ */
 const STORAGE_URL = "https://remote-storage.developerakademie.org/item";
 
+/**
+ * Stores an item in the remote storage using a specified key and value.
+ * 
+ * @param {string} key - The key associated with the item.
+ * @param {any} value - The value to be stored.
+ * @returns {Promise<object>} A Promise that resolves with the response JSON.
+ */
 async function setItem(key, value) {
-    // ("contactsRemote", contacts) or ("tasksRemote", tasks)  or ("currentUserName", nameAsObject)
     const payload = { key, value, token: STORAGE_TOKEN };
     return fetch(STORAGE_URL, { method: "POST", body: JSON.stringify(payload) }).then((res) =>
         res.json()
-    ); // response converted to JSON
+    ); 
 }
 
+/**
+ * Retrieves an item from remote storage using a specified key.
+ * 
+ * @param {string} key - The key associated with the item to retrieve.
+ * @returns {Promise<object>} A Promise that resolves with the retrieved item data.
+ */
 async function getItem(key) {
     const url = `${STORAGE_URL}?key=${key}&token=${STORAGE_TOKEN}`;
     let erg = await fetch(url).then((res) => res.json());
-    return erg; // Thus one can store erg in a variable
+    return erg; 
 }
