@@ -10,9 +10,7 @@
       href="assets/icons/logo-black.png"
       sizes="any"
     />
-
     <title>Contacts</title>
-
     <script src="javascripts/categoryColor.js"></script>
     <script src="javascripts/includeHTML.js"></script>
     <script src="javascripts/storage.js"></script>
@@ -42,7 +40,7 @@
     <button
       id="newContactBtn"
       class="new-contact-btn"
-      onclick="openNewContact()"
+      onclick="toggleNewContact()"
     >
       New contact &nbsp; <img src="assets/icons/new.contact.png" />
     </button>
@@ -63,7 +61,7 @@
           <div class="blueLine"></div>
         </div>
         <div class="addContactRight" >
-          <div onclick="closeNewContact()" class="x-mark">x</div>
+          <div onclick="toggleNewContact()" class="x-mark">x</div>
           <div class="createContactContainer">
             <div>
               <img class="contactImage" src="assets/icons/add_contact.png" />
@@ -94,7 +92,7 @@
             </div>
           </div>
           <div class="addContactBtn">
-            <button  type="button" onclick="closeNewContact()" class="cancel-btn hideMobile">
+            <button  type="button" onclick="toggleNewContact()" class="cancel-btn hideMobile">
               Cancel &nbsp; x
             </button>
             <button type="submit" class="create-contact-btn">

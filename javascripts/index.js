@@ -8,11 +8,13 @@ function initLoginPage() {
   changeLogoColor();
 }
 
+/**
+ * initializes the application for a guest user
+ * @async
+ */
 async function initGuestJOIN() {
   await setItem("currentUserName", { name: "Dear Guest" });
-
   await setItem("tasksRemote", tasks);
-
   window.location.href = "summary.html";
 }
 
@@ -53,35 +55,28 @@ function changeLogoColor() {
  */
 function changeArrowColor() {
   const arrow = document.getElementById("blueArrowLeft");
-
   if (window.innerWidth < 800) {
     arrow.src = "assets/icons/arrow-left-black.png";
   } else {
     arrow.src = "assets/icons/arrow-left.png";
   }
 }
-
 if (window.location.href.includes("sign_up.html")) {
   window.addEventListener("resize", changeArrowColor);
 }
 
 //---------------------logout popup window ---------------//
+
 /**
  * Toggles the visibility of the logout popup and overlay layer.
  * @returns {void}
  */
-function showLogout() {
-  document.getElementById("logout").classList.toggle("d-none");
-  document.getElementById("logoutLayer").classList.remove("d-none");
-}
+function toggleLogout() {
+  const logoutPopup = document.getElementById("logout");
+  const logoutLayer = document.getElementById("logoutLayer");
 
-/**
- * Hides the logout popup and overlay layer.
- * @returns {void}
- */
-function hideLogout() {
-  document.getElementById("logout").classList.add("d-none");
-  document.getElementById("logoutLayer").classList.add("d-none");
+  logoutPopup.classList.toggle("d-none");
+  logoutLayer.classList.toggle("d-none");
 }
 
 /**
@@ -103,12 +98,19 @@ function backToLogin() {
  * @returns {void}
  */
 function selectedMenu(menu) {
-  let elem = document.querySelectorAll(".menuText");
-  let selected = document.getElementById(`${menu}`);
-  for (let k = 0; k < elem.length; k++) {
-    elem[k].classList.remove("selectedMenu");
+  try {
+    let elem = document.querySelectorAll(".menuText");
+    let selected = document.getElementById(`${menu}`);
+
+    if (selected) {
+      for (let k = 0; k < elem.length; k++) {
+        elem[k].classList.remove("selectedMenu");
+      }
+      selected.classList.add("selectedMenu");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
   }
-  selected.classList.add("selectedMenu");
 }
 
 //------------------------------------------------------//
@@ -118,25 +120,54 @@ function selectedMenu(menu) {
  * @returns {void}
  */
 async function checkPassword() {
-  let enteredLoginPassword = document.getElementById("enteredLoginPassword");
-  let enteredLoginPasswordValue = enteredLoginPassword.value;
-  let enteredLoginEmail = document.getElementById("enteredLoginEmail");
-  let enteredLoginEmailValue = enteredLoginEmail.value;
-  let res = await getItem("usersRemote");
-  remoteUsersAsJSON = await JSON.parse(res.data.value.replace(/'/g, '"'));
-  let currentUser = remoteUsersAsJSON.filter((user) => user.email == enteredLoginEmailValue);
-  if (currentUser.length == 0) {
-  } else {
-    await setItem("currentUserName", { name: currentUser[0].name });
-  }
-  for (let i = 0; i < remoteUsersAsJSON.length; i++) {
-    const obj = remoteUsersAsJSON[i];
-    if (obj.email === enteredLoginEmailValue && obj.password === enteredLoginPasswordValue) {
-      window.location.href = "summary.html";
-      break;
-    } else {
-      enteredLoginPassword.value = "";
-      enteredLoginEmail.value = "";
+  try {
+    const enteredLoginPassword = document.getElementById("enteredLoginPassword");
+    const enteredLoginEmail = document.getElementById("enteredLoginEmail");
+    const res = await getItem("usersRemote");
+    const remoteUsersAsJSON = JSON.parse(res.data.value.replace(/'/g, '"'));
+    const currentUser = remoteUsersAsJSON.find((user) => user.email === enteredLoginEmail.value);
+    if (!currentUser) {
+      showPopup("User not found.");
+      emptyInputFields(enteredLoginPassword, enteredLoginEmail);
+      return;
     }
+    if (currentUser.password === enteredLoginPassword.value) {
+      await setItem("currentUserName", { name: currentUser.name });
+      window.location.href = "summary.html";
+    } else {
+      emptyInputFields(enteredLoginPassword, enteredLoginEmail);
+      showPopup("Incorrect password.");
+    }
+  } catch (error) {
+    console.error("An error occurred:", error);
+    showPopup("An error occurred.");
   }
+}
+
+/**
+ * Clears the values of the provided input fields.
+ * @param {HTMLInputElement} enteredLoginPassword - The input field for the login password.
+ * @param {HTMLInputElement} enteredLoginEmail - The input field for the login email.
+ * @returns {void}
+ */
+function emptyInputFields(enteredLoginPassword, enteredLoginEmail) {
+  enteredLoginPassword.value = "";
+  enteredLoginEmail.value = "";
+}
+
+/**
+ * Displays a popup message on the screen.
+ * @param {string} message - The message to be displayed in the popup.
+ * @returns {void}
+ */
+function showPopup(message) {
+  const popup = document.getElementById("loginPopup");
+  popup.innerHTML = message;
+  popup.style.opacity = "1";
+  setTimeout(() => {
+    popup.style.opacity = "0";
+  }, 1500);
+  document.addEventListener("click", function () {
+    popup.style.opacity = "0";
+  });
 }

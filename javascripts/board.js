@@ -26,8 +26,7 @@ async function initBoard() {
  */
 function renderCategoryLabelColor(i) {
   let categoryName =
-    remoteTasksAsJSON[i]["category"].charAt(0).toUpperCase() +
-    remoteTasksAsJSON[i]["category"].slice(1);
+    remoteTasksAsJSON[i]["category"].charAt(0).toUpperCase() + remoteTasksAsJSON[i]["category"].slice(1);
   let labelColor = findColorByName(categoryName);
 
   return labelColor;
@@ -230,25 +229,17 @@ function pushToAssignedContact(assignedToArray) {
  * Renders the assigned contacts in the edit mode.
  */
 function renderAssignedToEdit() {
-  let chosenContacts = document.getElementById("chosenContacts");
-  for (let i = 0; i < assignedContacts.length; i++) {
-    const contact = assignedContacts[i];
-    let color = contact["color"];
-    let assignedToName = contact["name"];
-    let initials = getInitials(assignedToName);
-    let contactIndex = contacts.findIndex((c) => {
-      return (
-        c.name === contact.name &&
-        c.color === contact.color &&
-        c.email === contact.email &&
-        c.phone === contact.phone
-      );
-    });
+  const chosenContacts = document.getElementById("chosenContacts");
+  assignedContacts.forEach((contact) => {
+    const { color, name, email, phone } = contact;
+    const initials = getInitials(name);
+    const contactIndex = contacts.findIndex(
+      (c) => c.name === name && c.color === color && c.email === email && c.phone === phone
+    );
     if (chosenContacts.children.length < 5) {
-      chosenContacts.innerHTML += `<div onclick="removeContact(${contactIndex})" style="background-color:${color}" class="chosenContactInitials">
-      ${initials}</div>`;
+      chosenContacts.innerHTML += `<div onclick="removeContact(${contactIndex})" style="background-color:${color}" class="chosenContactInitials">${initials}</div>`;
     }
-  }
+  });
 }
 
 /**
@@ -354,7 +345,6 @@ function renderUrgencyLabel(i) {
 function renderAssignedTo(taskID, containerClass) {
   const container = document.getElementById(containerClass);
   const assignedToArray = remoteTasksAsJSON[taskID]["assignedTo"];
-
   for (let i = 0; i < assignedToArray.length; i++) {
     const assignedTo = assignedToArray[i];
     const assignedToName = assignedTo["name"];
@@ -479,9 +469,7 @@ function filterCards() {
  * @returns {number} The count of completed subtasks.
  */
 function countDoneSubtasks(i) {
-  let doneSubtasks = remoteTasksAsJSON[i]["subtasks"].filter(
-    (subtask) => subtask.status === "done"
-  );
+  let doneSubtasks = remoteTasksAsJSON[i]["subtasks"].filter((subtask) => subtask.status === "done");
   let doneSubtasksCount = doneSubtasks.length;
   return doneSubtasksCount;
 }
@@ -585,7 +573,7 @@ function removeHighlightAll() {
  */
 function toggleDropdown(event, i) {
   event.stopPropagation();
-  let dropdownContent = document.getElementById(`dropdown-content${i}`);
+  const dropdownContent = document.getElementById(`dropdown-content${i}`);
   dropdownContent.style.transition = "opacity 0.3s ease";
   if (dropdownContent.style.display === "" || dropdownContent.style.display === "none") {
     dropdownContent.style.opacity = "0";
@@ -593,20 +581,18 @@ function toggleDropdown(event, i) {
     setTimeout(() => {
       dropdownContent.style.opacity = "1";
     }, 10);
-  } else {
-    dropdownContent.style.opacity = "0";
-    dropdownContent.style.display = "none";
-  }
-  function hideDropdown(event) {
-    if (!event.target.closest(".container")) {
-      dropdownContent.style.opacity = "0";
-      dropdownContent.style.display = "none";
-      document.removeEventListener("click", hideDropdown);
-    }
-  }
-  if (dropdownContent.style.display === "block") {
     document.addEventListener("click", hideDropdown);
+  } else {
+    hideDropdown();
   }
+}
+/**
+ * hides the Dropdown
+ */
+function hideDropdown() {
+  dropdownContent.style.opacity = "0";
+  dropdownContent.style.display = "none";
+  document.removeEventListener("click", hideDropdown);
 }
 
 /**

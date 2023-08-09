@@ -44,6 +44,7 @@ body {
 .textContainer {
   padding-top: 100px;
 }
+
 .textContainer a {
   text-decoration: none;
 }
@@ -58,6 +59,7 @@ body {
   padding-left: 40px;
   font-size: 20px;
 }
+
 .menuText p {
   text-decoration: none !important;
 }
@@ -82,6 +84,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .menuGap a {
   text-decoration: none;
 }
@@ -102,6 +105,7 @@ header {
   font-size: 25px;
   z-index: 101;
 }
+
 .header-logo {
   height: 64%;
   display: none;
@@ -132,6 +136,7 @@ header {
   height: 90%;
   border-radius: 100%;
 }
+
 .logout {
   position: absolute;
   top: 60px;
@@ -143,13 +148,16 @@ header {
   text-decoration: none;
   z-index: 999;
 }
+
 .logout a {
   text-decoration: none;
 }
+
 .logout:hover {
   cursor: pointer;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
 .popupMobile {
   font-size: 21px;
   padding: 8px 16px 8px 16px;
@@ -159,10 +167,12 @@ header {
   text-decoration: none;
   z-index: 9999;
 }
+
 .popupMobile:hover {
   transform: scale(1.02);
   background-color: var(--light-blue);
 }
+
 #logoutLayer {
   position: absolute;
   width: 100vw;
@@ -170,18 +180,40 @@ header {
   right: 0;
   top: 0;
 }
+
+#loginPopup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  position: absolute;
+  width: fit-content;
+  bottom: 515px;
+  background-color: var(--blue);
+  color: white;
+  padding: 16px;
+  font-size: 21px;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+}
+
+
 /*-------sideMenu && header end----------*/
 
 @media (max-width: 850px) {
   .menuText {
     padding-left: 24px;
   }
+
   .sideMenuContainer {
     width: 200px;
   }
+
   header {
     padding-left: 240px;
   }
+
   header p {
     margin: 0;
     font-size: 18px;
@@ -192,40 +224,50 @@ header {
   .hideMobile {
     display: none !important;
   }
+
   .showMobile {
     display: block !important;
   }
+
   .logout {
     padding: 8px;
   }
+
   .popupMobile {
     border-radius: 10px 0 10px 10px;
   }
+
   header p {
     display: none;
   }
+
   header {
     padding-left: 36px;
     padding-right: 0;
   }
+
   .header-logo {
     display: flex;
   }
+
   .logoContainer {
     display: none;
   }
+
   .sideMenuContainer {
     position: fixed;
     bottom: 0;
     width: 100vw;
     height: 80px;
   }
+
   .menuGap {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .textContainer {
     width: 100%;
     height: 100%;
@@ -234,6 +276,7 @@ header {
     align-items: center;
     padding: 0px;
   }
+
   .textContainer a {
     contain: content;
     height: 100%;
@@ -241,10 +284,12 @@ header {
     justify-content: center;
     align-items: center;
   }
+
   .menuText {
     padding: 16px 8px 16px 8px;
     flex-direction: column;
   }
+
   .menuText img {
     margin: 0px;
   }
@@ -266,16 +311,15 @@ header {
   font-weight: 400;
   src: url("../assets/fonts/inter-v12-latin-regular.eot");
   /* IE9 Compat Modes */
-  src: url("../assets/fonts/inter-v12-latin-regular.eot?#iefix")
-      format("embedded-opentype"),
-    /* IE6-IE8 */ url("../assets/fonts/inter-v12-latin-regular.woff2")
-      format("woff2"),
+  src: url("../assets/fonts/inter-v12-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */
+    url("../assets/fonts/inter-v12-latin-regular.woff2") format("woff2"),
     /* Super Modern Browsers */
-      url("../assets/fonts/inter-v12-latin-regular.woff") format("woff"),
-    /* Modern Browsers */ url("../assets/fonts/inter-v12-latin-regular.ttf")
-      format("truetype"),
+    url("../assets/fonts/inter-v12-latin-regular.woff") format("woff"),
+    /* Modern Browsers */
+    url("../assets/fonts/inter-v12-latin-regular.ttf") format("truetype"),
     /* Safari, Android, iOS */
-      url("../assets/fonts/inter-v12-latin-regular.svg#Inter") format("svg");
+    url("../assets/fonts/inter-v12-latin-regular.svg#Inter") format("svg");
   /* Legacy iOS */
 }
 

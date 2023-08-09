@@ -10,9 +10,7 @@ let remoteContactsAsJSON;
 async function initContactList() {
   let res = await getItem("contactsRemote");
   remoteContactsAsJSON = await JSON.parse(res.data.value.replace(/'/g, '"'));
-  letters = [];
-  contactsByLetter = [];
-  document.getElementById("contactList").innerHTML = "";
+  emptyContent();
   for (let i = 0; i < remoteContactsAsJSON.length; i++) {
     const contact = remoteContactsAsJSON[i];
     let name = contact.name;
@@ -29,6 +27,17 @@ async function initContactList() {
 }
 
 /**
+ * Empties the content of the contact list, resetting the letters and contactsByLetter arrays,
+ * and clearing the inner HTML of the contactList element.
+ * @returns {void}
+ */
+function emptyContent() {
+  letters = [];
+  contactsByLetter = [];
+  document.getElementById("contactList").innerHTML = "";
+}
+
+/**
  * Renders the contact list on the web page using the organized contacts data.
  * Invokes `renderSelectContactHTML()` when a contact is selected.
  */
@@ -40,21 +49,26 @@ function renderContactList() {
       "contactList"
     ).innerHTML += `<div id="${letter}" ><h3 class="letterHeader" >${letter}</h3></div>`;
 
-    for (let j = 0; j < contactsWithLetter.length; j++) {
-      let contact = contactsWithLetter[j];
-      let name = contact.name;
-      let initials = getInitials(name);
-      let email = contact.email;
-      let color = contact.color;
-      document.getElementById(`${letter}`).innerHTML += addContactsHTML(
-        i,
-        j,
-        color,
-        initials,
-        name,
-        email
-      );
-    }
+    displayContacts(contactsWithLetter, letter, i);
+  }
+}
+
+/**
+ * Displays the contacts with the given letter, adding their HTML representation
+ * to the appropriate section on the web page.
+ *
+ * @param {Array} contactsWithLetter - An array of contacts with the same starting letter.
+ * @param {string} letter - The starting letter of the contacts.
+ * @param {number} i - Index of the current iteration.
+ */
+function displayContacts(contactsWithLetter, letter, i) {
+  for (let j = 0; j < contactsWithLetter.length; j++) {
+    let contact = contactsWithLetter[j];
+    let name = contact.name;
+    let initials = getInitials(name);
+    let email = contact.email;
+    let color = contact.color;
+    document.getElementById(`${letter}`).innerHTML += addContactsHTML(i, j, color, initials, name, email);
   }
 }
 
@@ -147,6 +161,20 @@ async function addContact() {
   let phone = document.getElementById("newContactPhone");
   let randomNumber = Math.floor(Math.random() * nameColor.length);
 
+  pushNewContact(name, email, phone, randomNumber);
+  await setItem("contactsRemote", remoteContactsAsJSON);
+  closeContactWindow(name, email, phone);
+}
+
+/**
+ * Pushes a new contact object to the remote contacts array.
+ *
+ * @param {HTMLInputElement} name - The input element for contact name.
+ * @param {HTMLInputElement} email - The input element for contact email.
+ * @param {HTMLInputElement} phone - The input element for contact phone.
+ * @param {number} randomNumber - A random number used to select a color for the contact.
+ */
+function pushNewContact(name, email, phone, randomNumber) {
   let newContact = {
     name: name.value.charAt(0).toUpperCase() + name.value.slice(1),
     email: email.value,
@@ -154,28 +182,30 @@ async function addContact() {
     color: nameColor[randomNumber],
   };
   remoteContactsAsJSON.push(newContact);
-  await setItem("contactsRemote", remoteContactsAsJSON);
+}
 
+/**
+ * Closes the contact input window and performs related cleanup actions.
+ *
+ * @param {HTMLInputElement} name - The input element for contact name.
+ * @param {HTMLInputElement} email - The input element for contact email.
+ * @param {HTMLInputElement} phone - The input element for contact phone.
+ */
+function closeContactWindow(name, email, phone) {
   name.value = "";
   email.value = "";
   phone.value = "";
   contactPopup("new");
-  closeNewContact();
+  toggleNewContact();
   initContactList();
 }
 
 /**
- * Opens the overlay to add a new contact.
+ * Opens and closes the overlay to add a new contact.
  */
-function openNewContact() {
-  document.getElementById(`addContactsOverlay`).classList.remove("d-none");
-}
-
-/**
- * Closes the overlay for adding a new contact.
- */
-function closeNewContact() {
-  document.getElementById(`addContactsOverlay`).classList.add("d-none");
+function toggleNewContact() {
+  const addContactsOverlay = document.getElementById(`addContactsOverlay`);
+  addContactsOverlay.classList.toggle("d-none");
 }
 
 /**
@@ -279,16 +309,23 @@ async function saveContact(i, j) {
   contact.name = editName;
   contact.email = editMail;
   contact.phone = editPhone;
+  updateLocalStorageContacts(contact);
+  document.getElementById("contactsMid").innerHTML = "";
+  initContactList();
+  closeEditContact();
+}
 
+/**
+ * Updates the local storage with modified contact data.
+ *
+ * @param {Object} contact - The contact object with updated information.
+ * @returns {Promise<void>}
+ */
+async function updateLocalStorageContacts(contact) {
   remoteContactsAsJSON.name = contact.name;
   remoteContactsAsJSON.email = contact.email;
   remoteContactsAsJSON.phone = contact.phone;
   await setItem("contactsRemote", remoteContactsAsJSON);
-
-  document.getElementById("contactsMid").innerHTML = "";
-
-  initContactList();
-  closeEditContact();
 }
 
 /**
@@ -301,22 +338,28 @@ async function deleteContact(i, j) {
   let editName = document.getElementById("editName");
   let editMail = document.getElementById("editMail");
   let editPhone = document.getElementById("editPhone");
-
   let contact = contactsByLetter[letters[i]][j];
   let contactIndex = remoteContactsAsJSON.indexOf(contact);
-
   contactsByLetter[letters[i]].splice(j, 1);
-
   remoteContactsAsJSON.splice(contactIndex, 1);
   await setItem("contactsRemote", remoteContactsAsJSON);
+  emptyEditFields(editName, editMail, editPhone);
+  initContactList();
+  closeEditContact();
+}
 
+/**
+ * Empties the edit fields for contact information.
+ *
+ * @param {HTMLInputElement} editName - The input element for contact name.
+ * @param {HTMLInputElement} editMail - The input element for contact email.
+ * @param {HTMLInputElement} editPhone - The input element for contact phone.
+ */
+function emptyEditFields(editName, editMail, editPhone) {
   editName.value = "";
   editMail.value = "";
   editPhone.value = "";
   document.getElementById("contactsMid").innerHTML = "";
-
-  initContactList();
-  closeEditContact();
 }
 
 /**

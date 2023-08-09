@@ -20,21 +20,14 @@ async function initAddTask() {
  * @param {string} prio - The priority value ("urgent", "medium", or "low").
  */
 function setPrio(prio) {
-  let urgentIcon = document.getElementById("urgentIcon");
-  let mediumIcon = document.getElementById("mediumIcon");
-  let lowIcon = document.getElementById("lowIcon");
-  let prioIcon = document.getElementById(`${prio}Icon`);
-  let selectedPrio = document.getElementById(`${prio}`);
-  let elem = document.querySelectorAll(".prio-btn");
-  for (let k = 0; k < elem.length; k++) {
-    elem[k].classList.remove("urgent", "medium", "low");
-
-    lowIcon.src = `assets/icons/low.png`;
-    mediumIcon.src = `assets/icons/medium.png`;
-    urgentIcon.src = `assets/icons/urgent.png`;
+  const priorityValues = ["urgent", "medium", "low"];
+  for (const value of priorityValues) {
+    const element = document.getElementById(value);
+    const iconElement = document.getElementById(`${value}Icon`);
+    const iconSuffix = value === prio ? "_white" : "";
+    element.classList.toggle(value, value === prio);
+    iconElement.src = `assets/icons/${value}${iconSuffix}.png`;
   }
-  selectedPrio.classList.add(`${prio}`);
-  prioIcon.src = `assets/icons/${prio}_white.png`;
   priority = prio;
 }
 
@@ -55,9 +48,7 @@ function addContactNamesToAssignedTo() {
  * Adds categories to the "Category" dropdown in the add task form.
  */
 async function addCategories() {
-  document.getElementById(
-    "categoryDropdown"
-  ).innerHTML = `<div class="option" onclick="showNewCategory()">
+  document.getElementById("categoryDropdown").innerHTML = `<div class="option" onclick="showNewCategory()">
     New Category 
   </div>`;
   for (let i = 0; i < remoteCategoryAsJSON.length; i++) {
@@ -108,20 +99,10 @@ async function createTask(status) {
   let title = document.getElementById("addTaskTitle");
   let description = document.getElementById("addTaskDescription");
   let dueDate = document.getElementById("date");
-
   if (selectedCategory == "" || assignedContacts == "" || !priority) {
     taskPopup(alert);
   } else {
-    let newTask = {
-      title: title.value,
-      description: description.value,
-      status: status,
-      category: selectedCategory,
-      priority: priority,
-      subtasks: pushSubtasks(),
-      dueDate: dueDate.value,
-      assignedTo: assignedContacts,
-    };
+    let newTask = generateNewTask(title, description, dueDate, status);
     remoteTasksAsJSON.push(newTask);
     await setItem("tasksRemote", remoteTasksAsJSON);
     subtaskID = 0;
@@ -129,6 +110,29 @@ async function createTask(status) {
     taskPopup();
     boardCondition();
   }
+}
+
+/**
+ * Generates a new task object.
+ *
+ * @param {HTMLInputElement} title - The input element for task title.
+ * @param {HTMLInputElement} description - The input element for task description.
+ * @param {HTMLInputElement} dueDate - The input element for task due date.
+ * @param {string} status - The status of the task ("todo", "inProgress", or "done").
+ * @returns {Object} The newly generated task object.
+ */
+function generateNewTask(title, description, dueDate, status) {
+  let newTask = {
+    title: title.value,
+    description: description.value,
+    status: status,
+    category: selectedCategory,
+    priority: priority,
+    subtasks: pushSubtasks(),
+    dueDate: dueDate.value,
+    assignedTo: assignedContacts,
+  };
+  return newTask;
 }
 
 /**
@@ -164,6 +168,20 @@ function resetValues(dueDate, description, title) {
     document.getElementById("urgentIcon").src = "assets/icons/urgent.png";
     document.getElementById("lowIcon").src = "assets/icons/low.png";
   }
+  emptyTaskFields(title, description, dueDate, category, assignedTo, subtaskContainer);
+}
+
+/**
+ * Clears the task-related fields and UI elements.
+ *
+ * @param {HTMLInputElement} title - The input element for the task's title.
+ * @param {HTMLTextAreaElement} description - The textarea element for the task's description.
+ * @param {HTMLInputElement} dueDate - The input element for the task's due date.
+ * @param {HTMLSelectElement} category - The select element for the task's category.
+ * @param {HTMLElement} assignedTo - The element for displaying assigned contacts.
+ * @param {HTMLElement} subtaskContainer - The element for displaying subtasks.
+ */
+function emptyTaskFields(title, description, dueDate, category, assignedTo, subtaskContainer) {
   title.value = "";
   description.value = "";
   dueDate.value = "";
@@ -193,10 +211,8 @@ function selectOptionCategory(i) {
   let dropdown = document.getElementById("categoryDropdown");
   let category = document.getElementById("addTaskCategory");
   let selectedOption = event.target.innerHTML;
-
   category.innerHTML = selectedOption;
   selectedCategory = remoteCategoryAsJSON[i]["name"];
-
   dropdown.classList.remove("expanded");
   category.classList.remove("category-expanded");
 }
@@ -265,15 +281,26 @@ async function addNewCategory() {
   let newCat = newCatInp.value;
   newCat = newCat.charAt(0).toUpperCase() + newCat.slice(1);
   if (newCat && newColor) {
-    let newCategory = {
-      name: newCat,
-      color: newColor,
-    };
-    remoteCategoryAsJSON.push(newCategory);
-    await setItem("categoryRemote", remoteCategoryAsJSON);
+    pushNewCat();
   }
   addCategories();
   closeNewCategory();
+}
+
+/**
+ * Pushes a new category object to the remote category list.
+ *
+ * @param {string} newCat - The name of the new category.
+ * @param {string} newColor - The color of the new category.
+ * @returns {Promise<void>}
+ */
+async function pushNewCat() {
+  let newCategory = {
+    name: newCat,
+    color: newColor,
+  };
+  remoteCategoryAsJSON.push(newCategory);
+  await setItem("categoryRemote", remoteCategoryAsJSON);
 }
 
 /**
@@ -309,32 +336,22 @@ function openDropdownContacts() {
  * @param {number} i - Index of the selected contact in the contacts array.
  */
 function selectOptionContacts(i) {
-  let dropdown = document.getElementById("selectContactDropdown");
-  let selectContact = document.getElementById("selectContact");
-  let chosenContacts = document.getElementById("chosenContacts");
-  let assignedContact = document.getElementById(`assignedContactID${i}`);
-  let initials = getInitials(contacts[i]["name"]);
-  let color = contacts[i]["color"];
-
-  if (!isContactSelected(chosenContacts, contacts[i])) {
-    if (chosenContacts.children.length < 5) {
-      assignedContact.classList.add("d-none");
-
-      let newContactHTML = `
-        <div style="background-color: ${color}" class="chosenContactInitials" onclick="removeContact(${i})">
-          ${initials}
-        </div>
-      `;
-      chosenContacts.innerHTML += newContactHTML;
-      let selectedOption = dropdown.querySelector(`option[value="${i}"]`);
-      if (selectedOption) {
-        selectedOption.remove();
-      }
+  const dropdown = document.getElementById("selectContactDropdown");
+  const chosenContacts = document.getElementById("chosenContacts");
+  const assignedContact = document.getElementById(`assignedContactID${i}`);
+  const { name, color } = contacts[i];
+  const initials = getInitials(name);
+  if (!isContactSelected(chosenContacts, contacts[i]) && chosenContacts.children.length < 5) {
+    assignedContact.classList.add("d-none");
+    chosenContacts.innerHTML += `<div style="background-color: ${color}" class="chosenContactInitials" onclick="removeContact(${i})">${initials}</div>`;
+    const selectedOption = dropdown.querySelector(`option[value="${i}"]`);
+    if (selectedOption !== null) {
+      selectedOption.remove();
     }
   }
   dropdown.classList.remove("expanded");
-  selectContact.classList.remove("category-expanded");
 }
+
 
 /**
  * Checks if a contact is already selected in the chosen contacts list.
@@ -363,35 +380,28 @@ function isContactSelected(chosenContacts, contact) {
  * @param {number} i - Index of the contact to be removed in the contacts array.
  */
 function removeContact(i) {
-  let dropdown = document.getElementById("selectContactDropdown");
-  let contact = contacts[i];
-  let contactID = assignedContacts.indexOf(contact);
-  assignedContacts.splice(contactID, 1);
-  let selectedContact = contacts[i];
-  let contactName = selectedContact.name;
-  let assignedContactID = `assignedContactID${i}`;
-  let existingOption = dropdown.querySelector(`#${assignedContactID}`);
-  if (!existingOption) {
-    let newOptionHTML = `
-      <div id="${assignedContactID}" onclick="selectOptionContacts(${i})" class="option sb">${contactName}</div>
-    `;
-    dropdown.innerHTML += newOptionHTML;
+  const dropdown = document.getElementById("selectContactDropdown");
+  const contact = contacts[i];
+  const assignedContactID = `assignedContactID${i}`;
+  const contactName = contact.name;
+  const contactIndex = assignedContacts.indexOf(contact);
+  assignedContacts.splice(contactIndex, 1);
+  if (!dropdown.querySelector(`#${assignedContactID}`)) {
+    dropdown.innerHTML += `<div id="${assignedContactID}" onclick="selectOptionContacts(${i})" class="option sb">${contactName}</div>`;
   }
-  removeFromChosenContacts(i, contactName);
+  removeFromChosenContacts(i);
   recoverAssignedContact(assignedContactID);
 }
+
 
 /**
  * Removes a contact from the chosen contacts list UI.
  * @param {number} i - Index of the contact to be removed in the contacts array.
  * @param {string} contactName - Name of the contact to be removed.
  */
-function removeFromChosenContacts(i, contactName) {
+function removeFromChosenContacts(i) {
   let chosenContacts = document.getElementById("chosenContacts");
-  let contactInitials = getInitials(contactName);
-  let chosenContact = chosenContacts.querySelector(
-    `.chosenContactInitials[onclick*="removeContact(${i})"]`
-  );
+  let chosenContact = chosenContacts.querySelector(`.chosenContactInitials[onclick*="removeContact(${i})"]`);
   if (chosenContact) {
     chosenContact.remove();
   }
