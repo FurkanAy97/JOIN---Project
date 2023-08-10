@@ -4,12 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="assets/icons/logo-black.png"
-      sizes="any"
-    />
+    <link rel="icon" type="image/png" href="assets/icons/logo-black.png" sizes="any" />
 
     <title>Board</title>
 
@@ -26,10 +21,7 @@
     <link rel="stylesheet" href="css/task.css" />
   </head>
 
-  <body
-    onload="includeHTML('boardMenu'), initBoard()"
-    ondragend="removeHighlightAll()"
-  >
+  <body onload="includeHTML('boardMenu'), initBoard()" ondragend="removeHighlightAll()">
     <div w3-include-html="assets/templates/menu+header.html"></div>
     <div class="board-body">
       <div class="header-row">
@@ -37,39 +29,22 @@
         <div class="header-right">
           <div class="boardSearch">
             <form>
-              <input
-                id="searchInput"
-                type="search"
-                placeholder="Find Task"
-                required
-                autocomplete="off"
-              />
-              <button
-                class="search-button"
-                type="button"
-                onclick="filterCards()"
-              ></button>
+              <input id="searchInput" type="search" placeholder="Find Task" required autocomplete="off" />
+              <button class="search-button" type="button" onclick="filterCards()"></button>
             </form>
           </div>
           <button class="web-addTask-btn" onclick="slideInContainer('todo')">
             Add task
             <img class="plus-white" src="assets/icons/plus_white.png" />
           </button>
-          <img
-            class="mobile-addTask-btn"
-            src="assets/icons/plus-add-task-mobile.png"
-            onclick="slideInContainer()"
-          />
+          <img class="mobile-addTask-btn" src="assets/icons/plus-add-task-mobile.png" onclick="slideInContainer()" />
         </div>
       </div>
       <div class="task-area">
         <div class="task-container">
           <div class="task-header">
             <p>To Do</p>
-            <img
-              src="assets/icons/plus_button.png"
-              onclick="slideInContainer('todo')"
-            />
+            <img src="assets/icons/plus_button.png" onclick="slideInContainer('todo')" />
           </div>
           <div
             ondrop="moveTo('todo'); removeHighlightAll()"
@@ -77,16 +52,12 @@
             ondragover="allowDrop(event); highlight('todo')"
             ondrag="highlightAll()"
             id="todo"
-            class="statusContainer"
-          ></div>
+            class="statusContainer"></div>
         </div>
         <div class="task-container">
           <div class="task-header">
             <p>In progress</p>
-            <img
-              src="assets/icons/plus_button.png"
-              onclick="slideInContainer('inProgress')"
-            />
+            <img src="assets/icons/plus_button.png" onclick="slideInContainer('inProgress')" />
           </div>
           <div
             ondrop="moveTo('inProgress'); removeHighlightAll()"
@@ -94,16 +65,12 @@
             ondragover="allowDrop(event); highlight('inProgress')"
             ondrag="highlightAll()"
             id="inProgress"
-            class="statusContainer"
-          ></div>
+            class="statusContainer"></div>
         </div>
         <div class="task-container">
           <div class="task-header">
             <p>Awaiting Feedback</p>
-            <img
-              src="assets/icons/plus_button.png"
-              onclick="slideInContainer('awaitingFeedback')"
-            />
+            <img src="assets/icons/plus_button.png" onclick="slideInContainer('awaitingFeedback')" />
           </div>
           <div
             ondrop="moveTo('awaitingFeedback'); removeHighlightAll()"
@@ -111,16 +78,12 @@
             ondragover="allowDrop(event); highlight('awaitingFeedback')"
             ondrag="highlightAll()"
             id="awaitingFeedback"
-            class="statusContainer"
-          ></div>
+            class="statusContainer"></div>
         </div>
         <div class="task-container">
           <div class="task-header">
             <p>Done</p>
-            <img
-              src="assets/icons/plus_button.png"
-              onclick="slideInContainer('done')"
-            />
+            <img src="assets/icons/plus_button.png" onclick="slideInContainer('done')" />
           </div>
           <div
             ondrop="moveTo('done'); removeHighlightAll()"
@@ -128,8 +91,7 @@
             ondragover="allowDrop(event); highlight('done')"
             ondrag="highlightAll()"
             id="done"
-            class="statusContainer"
-          ></div>
+            class="statusContainer"></div>
         </div>
       </div>
     </div>
