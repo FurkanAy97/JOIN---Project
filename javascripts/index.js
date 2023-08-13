@@ -15,6 +15,7 @@ function initLoginPage() {
 async function initGuestJOIN() {
   await setItem("currentUserName", { name: "Dear Guest" });
   await setItem("tasksRemote", tasks);
+  grantAccess();
   window.location.href = "summary.html";
 }
 
@@ -74,7 +75,6 @@ if (window.location.href.includes("sign_up.html")) {
 function toggleLogout() {
   const logoutPopup = document.getElementById("logout");
   const logoutLayer = document.getElementById("logoutLayer");
-
   logoutPopup.classList.toggle("d-none");
   logoutLayer.classList.toggle("d-none");
 }
@@ -126,21 +126,61 @@ async function checkPassword() {
     const res = await getItem("usersRemote");
     const remoteUsersAsJSON = JSON.parse(res.data.value.replace(/'/g, '"'));
     const currentUser = remoteUsersAsJSON.find((user) => user.email === enteredLoginEmail.value);
-    if (!currentUser) {
-      showPopup("User not found.");
-      emptyInputFields(enteredLoginPassword, enteredLoginEmail);
-      return;
-    }
-    if (currentUser.password === enteredLoginPassword.value) {
-      await setItem("currentUserName", { name: currentUser.name });
-      window.location.href = "summary.html";
-    } else {
-      emptyInputFields(enteredLoginPassword, enteredLoginEmail);
-      showPopup("Incorrect password.");
-    }
+    setRememberMe();
+    checkIfUserExist(currentUser, enteredLoginPassword, enteredLoginEmail);
+    passwordValidation(currentUser, enteredLoginPassword, enteredLoginEmail);
   } catch (error) {
     console.error("An error occurred:", error);
     showPopup("An error occurred.");
+  }
+}
+
+function setRememberMe() {
+  const rememberMeCheckbox = document.getElementById("rememberMeCheckbox");
+  const enteredLoginEmail = document.getElementById("enteredLoginEmail").value;
+
+  if (rememberMeCheckbox.checked) {
+    localStorage.setItem("email", JSON.stringify(enteredLoginEmail));
+  }
+}
+
+function rememberMe() {
+  let savedEmail = localStorage.getItem("email");
+  if (savedEmail) {
+    document.getElementById("enteredLoginEmail").value = JSON.parse(savedEmail);
+  }
+}
+
+/**
+ * Checks if the user exists based on the current user data.
+ * @param {Object|null} currentUser - The current user data if found, or null if not found.
+ * @param {HTMLInputElement} enteredLoginPassword - The password input field.
+ * @param {HTMLInputElement} enteredLoginEmail - The email input field.
+ * @returns {void}
+ */
+function checkIfUserExist(currentUser, enteredLoginPassword, enteredLoginEmail) {
+  if (!currentUser) {
+    showPopup("User not found.");
+    emptyInputFields(enteredLoginPassword, enteredLoginEmail);
+    return;
+  }
+}
+
+/**
+ * Validates the entered password and performs actions based on validation results.
+ * @param {Object|null} currentUser - The current user data if found, or null if not found.
+ * @param {HTMLInputElement} enteredLoginPassword - The password input field.
+ * @param {HTMLInputElement} enteredLoginEmail - The email input field.
+ * @returns {void}
+ */
+async function passwordValidation(currentUser, enteredLoginPassword, enteredLoginEmail) {
+  if (currentUser.password === enteredLoginPassword.value) {
+    await setItem("currentUserName", { name: currentUser.name });
+    grantAccess();
+    window.location.href = "summary.html";
+  } else {
+    emptyInputFields(enteredLoginPassword, enteredLoginEmail);
+    showPopup("Incorrect password.");
   }
 }
 

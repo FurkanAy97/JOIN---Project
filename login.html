@@ -15,7 +15,7 @@
 
 </head>
 
-<body>
+<body onload="rememberMe(), removeAccess()">
     <div class="login-container">
         <div class="login-form">
             <form onsubmit="return false;">
@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-actions">
                         <label>
-                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                            <input type="checkbox" checked="checked" name="remember" id="rememberMeCheckbox"> Remember me
                         </label>
                         <a class="forgot-password" href="forgotPassword.html">Forgot my password</a>
                     </div>
@@ -50,6 +50,7 @@
             <img src="assets/icons/logo-black.png" class="logo-big-static"/>
         </div>
     </div>
+    <script src="javascripts/auth.js"></script>
     <script src="javascripts/storage.js"></script>
     <script src="javascripts/includeHTML.js"></script>
     <script src="javascripts/register.js"></script>

@@ -8,13 +8,14 @@
 
     <title>Help</title>
 
+    <script src="javascripts/auth.js"></script>
     <script src="javascripts/includeHTML.js"></script>
     <script src="javascripts/index.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/legalAndHelp.css" />
   </head>
 
-  <body onload="includeHTML('help')">
+  <body onload="checkifLoggedIn() ,includeHTML('help')">
     <div w3-include-html="assets/templates/menu+header.html"></div>
     <div class="overallContainer">
       <div class="rightContainer">

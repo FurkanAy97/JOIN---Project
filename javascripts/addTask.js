@@ -8,6 +8,7 @@ let remoteCategoryAsJSON;
  * initializes the AddTask Page
  */
 async function initAddTask() {
+  checkifLoggedIn()
   remoteTasksAsJSON = await getRemoteData("tasksRemote");
   remoteCategoryAsJSON = await getRemoteData("categoryRemote");
   addContactNamesToAssignedTo();

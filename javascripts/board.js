@@ -9,6 +9,7 @@ let assignedContactNames = [];
  * @returns {Promise<void>}
  */
 async function initBoard() {
+  checkifLoggedIn()
   remoteTasksAsJSON = await getRemoteData("tasksRemote");
   remoteCategoryAsJSON = await getRemoteData("categoryRemote");
   renderTaskCards("todo", "todo");

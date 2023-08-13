@@ -8,9 +8,15 @@ let remoteContactsAsJSON;
  * @returns {Promise<void>}
  */
 async function initContactList() {
+  checkifLoggedIn()
   let res = await getItem("contactsRemote");
   remoteContactsAsJSON = await JSON.parse(res.data.value.replace(/'/g, '"'));
   emptyContent();
+  pushInitials();
+  renderContactList();
+}
+
+function pushInitials() {
   for (let i = 0; i < remoteContactsAsJSON.length; i++) {
     const contact = remoteContactsAsJSON[i];
     let name = contact.name;
@@ -23,7 +29,6 @@ async function initContactList() {
     }
     contactsByLetter[firstLetter].push(contact);
   }
-  renderContactList();
 }
 
 /**
