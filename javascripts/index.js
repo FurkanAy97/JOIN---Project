@@ -135,19 +135,32 @@ async function checkPassword() {
   }
 }
 
+/**
+ * Sets the email and password in local storage if the "Remember Me" checkbox is checked.
+ * @returns {void}
+ */
 function setRememberMe() {
   const rememberMeCheckbox = document.getElementById("rememberMeCheckbox");
   const enteredLoginEmail = document.getElementById("enteredLoginEmail").value;
+  const enteredLoginPassword = document.getElementById("enteredLoginPassword").value;
 
   if (rememberMeCheckbox.checked) {
     localStorage.setItem("email", JSON.stringify(enteredLoginEmail));
+    localStorage.setItem("password", JSON.stringify(enteredLoginPassword));
   }
 }
 
+/**
+ * Populates the login form with previously saved email and password from local storage.
+ *
+ * @returns {void}
+ */
 function rememberMe() {
   let savedEmail = localStorage.getItem("email");
-  if (savedEmail) {
+  let savedPassword = localStorage.getItem("password");
+  if (savedEmail && savedPassword) {
     document.getElementById("enteredLoginEmail").value = JSON.parse(savedEmail);
+    document.getElementById("enteredLoginPassword").value = JSON.parse(savedPassword);
   }
 }
 
