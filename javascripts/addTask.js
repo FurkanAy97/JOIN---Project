@@ -334,7 +334,7 @@ function openDropdownContacts() {
    * Add an event listener to close the dropdown when clicking outside the "content" container.
    */
   document.addEventListener("click", function (event) {
-    const contentContainer = document.querySelector(".content");
+    const contentContainer = document.getElementById("assignedToContent");
     if (contentContainer && !contentContainer.contains(event.target)) {
       dropdown.classList.remove("expanded");
       selectContact.classList.remove("category-expanded");

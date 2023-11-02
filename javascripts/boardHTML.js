@@ -144,7 +144,7 @@ function editTaskCardHTML(taskIndex) {
             </div>
             <div>
               <p>Assigned to</p>
-              <div class="content">
+              <div class="content" id="assignedToContent">
                 <div
                   onclick="openDropdownContacts()"
                   id="selectContact"
@@ -257,7 +257,7 @@ function slideInHTML(status) {
                 </div>
                 <div>
                   <p>Assigned to</p>
-                  <div class="content">
+                  <div class="content" id="assignedToContent">
                     <div
                       onclick="openDropdownContacts()"
                       id="selectContact"

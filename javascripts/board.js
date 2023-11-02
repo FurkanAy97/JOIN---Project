@@ -587,12 +587,17 @@ function toggleDropdown(event, i) {
     hideDropdown();
   }
 }
+
 /**
  * hides the Dropdown
  */
 function hideDropdown() {
-  dropdownContent.style.opacity = "0";
-  dropdownContent.style.display = "none";
+  const dropdowns = document.querySelectorAll(".dropdown-content");
+
+  dropdowns.forEach(dropdown => {
+    dropdown.style.opacity = "0";
+    dropdown.style.display = "none";
+  });
   document.removeEventListener("click", hideDropdown);
 }
 
