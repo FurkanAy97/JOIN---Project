@@ -8,7 +8,7 @@ let remoteCategoryAsJSON;
  * initializes the AddTask Page
  */
 async function initAddTask() {
-  checkifLoggedIn()
+  checkifLoggedIn();
   remoteTasksAsJSON = await getRemoteData("tasksRemote");
   remoteCategoryAsJSON = await getRemoteData("categoryRemote");
   addContactNamesToAssignedTo();
@@ -328,8 +328,33 @@ async function removeCategory(event, i) {
 function openDropdownContacts() {
   let dropdown = document.getElementById("selectContactDropdown");
   let selectContact = document.getElementById("selectContact");
-  dropdown.classList.toggle("expanded");
-  selectContact.classList.toggle("category-expanded");
+  toggleExpandedClasslist(dropdown, selectContact);
+
+  /**
+   * Add an event listener to close the dropdown when clicking outside the "content" container.
+   */
+  document.addEventListener("click", function (event) {
+    const contentContainer = document.querySelector(".content");
+    if (contentContainer && !contentContainer.contains(event.target)) {
+      dropdown.classList.remove("expanded");
+      selectContact.classList.remove("category-expanded");
+    }
+  });
+}
+
+/**
+ * Toggles the "expanded" class for the dropdown and "category-expanded" class for the selectContact elements.
+ * @param {HTMLElement} dropdown - The dropdown element.
+ * @param {HTMLElement} selectContact - The selectContact element.
+ */
+function toggleExpandedClasslist(dropdown, selectContact) {
+  if (selectContact.classList.contains("category-expanded")) {
+    dropdown.classList.remove("expanded");
+    selectContact.classList.remove("category-expanded");
+  } else {
+    dropdown.classList.add("expanded");
+    selectContact.classList.add("category-expanded");
+  }
 }
 
 /**
@@ -350,9 +375,7 @@ function selectOptionContacts(i) {
       selectedOption.remove();
     }
   }
-  dropdown.classList.remove("expanded");
 }
-
 
 /**
  * Checks if a contact is already selected in the chosen contacts list.
@@ -393,7 +416,6 @@ function removeContact(i) {
   removeFromChosenContacts(i);
   recoverAssignedContact(assignedContactID);
 }
-
 
 /**
  * Removes a contact from the chosen contacts list UI.

@@ -84,6 +84,7 @@ function openTaskCardHTML(i, cardID) {
   `;
 }
 
+
 /**
  * Generates HTML for editing a task card.
  * @param {number} taskIndex - The index of the task in the remoteTasksAsJSON array.
